@@ -26,3 +26,4 @@
 /Users/tajjacob/Documents/GitHub/dotnet-course-code/HelloWorld/obj/Debug/net9.0/HelloWorld.pdb
 /Users/tajjacob/Documents/GitHub/dotnet-course-code/HelloWorld/obj/Debug/net9.0/HelloWorld.genruntimeconfig.cache
 /Users/tajjacob/Documents/GitHub/dotnet-course-code/HelloWorld/obj/Debug/net9.0/ref/HelloWorld.dll
+/Users/tajjacob/Documents/GitHub/dotnet-course-code/HelloWorld/obj/Debug/net9.0/HelloWorld.sourcelink.json
