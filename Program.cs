@@ -1,4 +1,5 @@
-﻿// 22. Conditional Statements
+﻿// 23. loops - for, foreach, while, do while
+// Demonstrates different ways to iterate over an array and calculate the total value of its elements.
 
 using System;
 
@@ -8,43 +9,68 @@ namespace MyApp
     {
         static void Main(string[] args)
         {
-            // int myInt = 5;
-            // int mySecondInt = 10;
+            int[] intsToCompress = { 10, 15, 20, 25, 30, 12, 34 };
 
-            // if (myInt < mySecondInt)
-            // {
-            //     myInt += 10;
-            // }
+            int totalValue = intsToCompress[0] + intsToCompress[1] + intsToCompress[2] +
+                             intsToCompress[3] + intsToCompress[4] + intsToCompress[5] +
+                             intsToCompress[6];
 
-            // Console.WriteLine("myInt: " + myInt);
+            Console.WriteLine($"Total Value: {totalValue}"); // Outputs: Total Value: 146    
 
-            string myCow = "cow";
-            string myCapitalizedCow = "Cow";
+            totalValue = 0;
 
-            // if (myCow == myCapitalizedCow)
-            // {
-            //     Console.WriteLine("The strings are equal.");
-            // }
-            // else
-            // {
-            //     Console.WriteLine("The strings are not equal.");
-            // }
-
-            switch (myCow)
+            for (int i = 0; i < intsToCompress.Length; i++)
             {
-                case "dog":
-                    Console.WriteLine("It's a dog.");
-                    break;
-                case "cat":
-                    Console.WriteLine("It's a cat.");
-                    break;
-                case "cow":
-                    Console.WriteLine("It's a cow.");
-                    break;
-                default:
-                    Console.WriteLine("Unknown animal.");
-                    break;
+                totalValue += intsToCompress[i];
             }
+            Console.WriteLine($"Total Value using loop: {totalValue}"); // Outputs: Total Value using loop: 146
+
+
+            totalValue = 0;
+            foreach (int intForCompression in intsToCompress)
+            {
+                if (intForCompression > 20)
+                {
+                    totalValue += intForCompression;
+                }
+
+            }
+            Console.WriteLine($"Total Value using foreach with if: {totalValue}"); // Outputs: Total Value using foreach with if: 89
+
+            totalValue = 0;
+
+            foreach (int intForCompression in intsToCompress)
+            {
+                totalValue += intForCompression;
+            }
+            Console.WriteLine($"Total Value using foreach: {totalValue}"); // Outputs: Total Value using foreach: 146
+
+            int index = 0;
+            totalValue = 0;
+
+            while (index < intsToCompress.Length)
+            {
+                totalValue += intsToCompress[index];
+                index++;
+            }
+            Console.WriteLine($"Total Value using while: {totalValue}"); // Outputs: Total Value using while: 146
+            
+           int ind = 0;
+            totalValue = 0;
+
+            do
+            {
+                totalValue += intsToCompress[ind];
+                ind++;
+            }
+
+            while (ind < intsToCompress.Length); // run then check condition
+
+            Console.WriteLine($"Total Value using do while: {totalValue}"); // Outputs: Total Value using do while: 146
+            
+            totalValue = 0;
+            totalValue = intsToCompress.Sum();
+            Console.WriteLine($"Total Value using LINQ Sum(): {totalValue}"); // Outputs: Total Value using LINQ Sum(): 146
 
 
         }
