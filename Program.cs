@@ -1,4 +1,4 @@
-﻿// 19. Data Structures 
+﻿// 20. Operators and Conditionals
 
 using System;
 
@@ -8,31 +8,59 @@ namespace MyApp
     {
         static void Main(string[] args)
         {
-            string[] myGroceryArray = ["Cheese", "Milk"];
-            // Console.WriteLine(myGroceryArray[0]);
+            int myInt = 5;
+            int mySecondInt = 10;
+            // Console.WriteLine(myInt.Equals(mySecondInt)); // False
+            // Console.WriteLine(myInt.Equals(mySecondInt / 2)); // True
 
-            List<string> myGroceryList = new List<string>();
-            myGroceryList.Add("Ice Cream");
-            myGroceryList.Add("Coffee");
-            // Console.WriteLine(myGroceryList[1]);
+            // Console.WriteLine(myInt == mySecondInt); // False
+            // Console.WriteLine(myInt == mySecondInt / 2); // True
+            // Console.WriteLine(myInt != mySecondInt); // True
+            Console.WriteLine(myInt > mySecondInt); // False
+            Console.WriteLine(myInt < mySecondInt); // True
 
-            IEnumerable<string> myGroceryEnumerable = new List<string>(); // 
+            Console.WriteLine(5 < 10 && 5 < 20); // True
+            Console.WriteLine(5 < 10 && 5 > 20); // False
+            Console.WriteLine(5 < 10 || 5 > 20); // True
+            Console.WriteLine(!(5 < 10 || 5 > 20)); // False
 
-            List<string> mySecondGroceryList = myGroceryEnumerable.ToList();
+            // myInt++;
 
-            int[,] myMultiDimensionalArray =
-            {
-                {1, 2, 3 },
-                {4, 5, 6 },
-                {7, 8, 9 }
-            };
+            // Console.WriteLine(myInt);
 
-            // Console.WriteLine(myMultiDimensionalArray[1, 1]);
+            // myInt += 7;
 
-            Dictionary<string, int> groceryPrices = new Dictionary<string, int>();
-            groceryPrices["Cheese"] = 5;
+            // Console.WriteLine(myInt);
 
-            Console.WriteLine(groceryPrices["Cheese"]);
+            // myInt -= 8;
+
+            // Console.WriteLine(myInt);
+
+            // Console.WriteLine(myInt * mySecondInt);
+            // Console.WriteLine(myInt / mySecondInt);
+            // // Console.WriteLine(myInt + mySecondInt);
+
+            // Console.WriteLine(5 + 5 * 2); // 15
+            // Console.WriteLine((5 + 5) * 2); // 20
+
+            // Console.WriteLine(Math.Pow(5, 2)); // 25
+            // Console.WriteLine(Math.Sqrt(25)); // 5
+
+            // string myString = "test";
+
+            // Console.WriteLine(myString);
+            // myString += ". second test.";
+            // Console.WriteLine(myString);
+
+            // myString = myString + " third test.";
+            // Console.WriteLine(myString);
+
+            // string[] myStringArray = myString.Split(". ");
+
+            // Console.WriteLine(myStringArray[0]);
+            // Console.WriteLine(myStringArray[1]);
+            // Console.WriteLine(myStringArray[2]);
+
 
 
         }
