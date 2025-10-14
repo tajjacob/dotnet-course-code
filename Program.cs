@@ -5,7 +5,8 @@ using System;
 
 namespace MyApp
 {
-    class Program
+    class Program // test
+
     {
         static void Main(string[] args)
         {
@@ -54,8 +55,8 @@ namespace MyApp
                 index++;
             }
             Console.WriteLine($"Total Value using while: {totalValue}"); // Outputs: Total Value using while: 146
-            
-           int ind = 0;
+
+            int ind = 0;
             totalValue = 0;
 
             do
@@ -67,10 +68,23 @@ namespace MyApp
             while (ind < intsToCompress.Length); // run then check condition
 
             Console.WriteLine($"Total Value using do while: {totalValue}"); // Outputs: Total Value using do while: 146
-            
+
             totalValue = 0;
             totalValue = intsToCompress.Sum();
             Console.WriteLine($"Total Value using LINQ Sum(): {totalValue}"); // Outputs: Total Value using LINQ Sum(): 146
+
+            List<int> myNumberList = new List<int>(){
+                2, 3, 5, 6, 7, 9, 10, 123, 324, 54
+            };
+            //use a foreach loop to print every even number in myNumberList to the console.
+            foreach (int number in myNumberList)
+            {
+                if (number % 2 == 0)
+                {
+                    Console.WriteLine(number);
+                }
+            }
+
 
 
         }
