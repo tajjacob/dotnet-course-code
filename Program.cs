@@ -73,20 +73,22 @@ namespace MyApp
             totalValue = intsToCompress.Sum();
             Console.WriteLine($"Total Value using LINQ Sum(): {totalValue}"); // Outputs: Total Value using LINQ Sum(): 146
 
-            List<int> myNumberList = new List<int>(){
-                2, 3, 5, 6, 7, 9, 10, 123, 324, 54
-            };
-            //use a foreach loop to print every even number in myNumberList to the console.
-            foreach (int number in myNumberList)
+            int[] intsToCompress2 = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+            totalValue = GetSum(intsToCompress2);
+            Console.WriteLine($"Total Value using method: {totalValue}"); // Outputs: Total Value using method: 55
+
+
+
+        }
+
+        private static int GetSum(int[] intsToCompress)
+        {
+            int totalValue = 0;
+            foreach (int intForCompression in intsToCompress)
             {
-                if (number % 2 == 0)
-                {
-                    Console.WriteLine(number);
-                }
+                totalValue += intForCompression;
             }
-
-
-
+            return totalValue;
         }
     }
 }
