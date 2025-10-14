@@ -1,5 +1,4 @@
-﻿// 23. loops - for, foreach, while, do while
-// Demonstrates different ways to iterate over an array and calculate the total value of its elements.
+﻿// 24. Methods (functions)
 
 using System;
 
@@ -8,6 +7,13 @@ namespace MyApp
     class Program // test
 
     {
+
+       static int accessibleInt = 7; // static method can only access other static attributes
+
+        void TestMethod() // non-static method can access static attributes or non-static attributes
+        {
+            Console.WriteLine($"Accessible Int: {accessibleInt}");
+        }
         static void Main(string[] args)
         {
             int[] intsToCompress = { 10, 15, 20, 25, 30, 12, 34 };
