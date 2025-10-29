@@ -13,24 +13,20 @@ CREATE TABLE TutorialAppSchema.Computer
 (
     -- TableId INT IDENTITY(Starting, Increment By)
     ComputerId INT IDENTITY(1,1) PRIMARY KEY -- use to make the value always unique
-    -- , Motherboard CHAR(10) -- 'x'
-    -- , Motherboard VARCHAR(10) -- 'x' unicode
-    , Motherboard NVARCHAR(50) -- 'x' nonunicode
-    , CPUCore INT 
+    , Motherboard NVARCHAR(50) -- NVARCHAR is for Unicode characters
+    , CPUCore INT -- Consider adding a DEFAULT constraint if NULLs should be replaced
     , HasWifi BIT -- like boolean, 1 or 0.
     , HasLTE BIT
     , ReleaseDate DATETIME
     , Price DECIMAL(18, 4)
-    , videoCard NVARCHAR(50)
+    , VideoCard NVARCHAR(50)
 
 )
 GO
 
-ALTER TABLE TutorialAppSchema.Computer
-ADD ReleaseDate DATETIME;
-
 SELECT [ComputerId],
     [Motherboard],
+    -- ISNULL is great for changing NULLs in the output of a SELECT
     ISNULL([CPUCore], 4),
     [HasWifi],
     [HasLTE],
@@ -50,7 +46,7 @@ INSERT INTO TutorialAppSchema.Computer (
     [HasWifi],
     [HasLTE],
     [Price],
-    [videoCard],
+    [VideoCard],
     [ReleaseDate]
 ) VALUES (
     'Sample-Motherboard2',
@@ -67,3 +63,4 @@ INSERT INTO TutorialAppSchema.Computer (
 -- UPDATE TutorialAppSchema.Computer SET CPUCore = 14 WHERE ComputerId = 2
 UPDATE TutorialAppSchema.Computer SET CPUCore = 14 WHERE ReleaseDate < '2025-10-17'
 
+USE DotNetCourseDatabase -- switch to the database 
