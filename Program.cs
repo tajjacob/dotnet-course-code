@@ -1,4 +1,4 @@
-﻿// 36. Database Connections
+﻿// 40. Dapper Pt 1
 
 using System;
 using System.Data;
@@ -34,19 +34,43 @@ namespace HelloWorld
                 CPUCore = 8,
                 HasWifi = true,
                 HasLTE = true,
-                ReleaseDate = new DateTime(2021, 6, 15),
+                ReleaseDate = DateTime.Now,
                 Price = 1299.99m,
-                VideoCard = "NVIDIA GeForce RTX 3080"
+                VideoCard = "NVIDIA GeForce RTX 5010"
             };
-            myComputer.Price = 1199.99m; // you can change properties if they have a set accessor
-            Console.WriteLine($"My computer has the following specs:");
-            Console.WriteLine($"Motherboard: {myComputer.Motherboard}");
-            Console.WriteLine($"CPU Cores: {myComputer.CPUCore}");
-            Console.WriteLine($"Has Wifi: {myComputer.HasWifi}");
-            Console.WriteLine($"Has LTE: {myComputer.HasLTE}");
-            Console.WriteLine($"Release Date: {myComputer.ReleaseDate.ToShortDateString()}");
-            Console.WriteLine($"Price: ${myComputer.Price}");
-            Console.WriteLine($"Video Card: {myComputer.VideoCard}");
+
+            string sql = @"INSERT INTO TutorialAppSchema.Computer 
+                           (Motherboard, CPUCore, HasWifi, HasLTE, ReleaseDate, Price, VideoCard) 
+                           VALUES 
+                           (@Motherboard, @CPUCore, @HasWifi, @HasLTE, @ReleaseDate, @Price, @VideoCard);"; // Using named parameters for better readability and maintainability
+                
+
+            Console.WriteLine(sql);
+
+
+            // Dapper automatically maps properties of myComputer to the named parameters in the SQL string.
+            // It also handles proper type conversion and prevents SQL injection.
+            int result = dbConnection.Execute(sql, myComputer);  // explanation: This line executes the SQL insert command using the properties of the myComputer object to fill in the parameter values.
+            Console.WriteLine($"Number of rows inserted: {result}");
+
+            string sqlSelect = @"
+            SELECT 
+                Computer.ComputerId,
+                Computer.Motherboard,
+                Computer.HasWifi,
+                Computer.HasLTE,
+                Computer.ReleaseDate,
+                Computer.Price,
+                Computer.VideoCard
+             FROM TutorialAppSchema.Computer";
+
+            IEnumerable<Computer> computers = dbConnection.Query<Computer>(sqlSelect);
+
+            foreach(Computer computer in computers)
+            {
+                Console.WriteLine($" Motherboard: {computer.Motherboard}, Price: {computer.Price}");
+            }
+
         }
     }
 }
