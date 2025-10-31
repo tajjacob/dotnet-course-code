@@ -1,9 +1,10 @@
-﻿// 40. Dapper Pt 1
+﻿// 40. Dapper Pt 2
 
 using System;
 using System.Data;
 using System.Text.RegularExpressions;
 using Dapper;
+using HelloWorld.Data;
 using HelloWorld.Models;
 using Microsoft.Data.SqlClient;
 
@@ -15,18 +16,10 @@ namespace HelloWorld
     {
         static void Main(string[] args)
         {
-            // string connectionString = "Server=localhost;Database=DotNetCourseDatabase;TrustServerCertificate=True;Trusted_Connection=true;";// for windows authentication
-            string connectionString = "Server=localhost;Database=DotNetCourseDatabase;TrustServerCertificate=True;Trusted_Connection=false;User Id=sa;Password=SQLConnect1!;"; // for mac or linux authentication
+            DataContextDapper dapper = new DataContextDapper();
+            DateTime rightNow = dapper.LoadDataSingle<DateTime>("SELECT GETDATE()"); // explanation: This line executes the SQL command and retrieves the first result as a DateTime object.
 
-            IDbConnection dbConnection = new SqlConnection(connectionString); // explanation: This creates a new SQL connection using the provided connection string.
-
-            string sqlCommand = "SELECT GETDATE()"; // explanation: This SQL command is intended to select the current date from the database
-
-            // dbConnection.Query<DateTime>(sqlCommand); // explanation: This line executes the SQL command against the database and maps the result to a collection of DateTime objects.
-
-            DateTime rightNow = dbConnection.QueryFirst<DateTime>(sqlCommand); // explanation: This line executes the SQL command and retrieves the first result as a DateTime object.
-
-            Console.WriteLine(rightNow.ToShortDateString());
+            // Console.WriteLine(rightNow.ToShortDateString());
             Computer myComputer = new Computer()
 
             {
@@ -43,14 +36,15 @@ namespace HelloWorld
                            (Motherboard, CPUCore, HasWifi, HasLTE, ReleaseDate, Price, VideoCard) 
                            VALUES 
                            (@Motherboard, @CPUCore, @HasWifi, @HasLTE, @ReleaseDate, @Price, @VideoCard);"; // Using named parameters for better readability and maintainability
-                
+
 
             Console.WriteLine(sql);
 
 
             // Dapper automatically maps properties of myComputer to the named parameters in the SQL string.
             // It also handles proper type conversion and prevents SQL injection.
-            int result = dbConnection.Execute(sql, myComputer);  // explanation: This line executes the SQL insert command using the properties of the myComputer object to fill in the parameter values.
+            
+            bool result = dapper.ExecuteSql(sql);
             Console.WriteLine($"Number of rows inserted: {result}");
 
             string sqlSelect = @"
@@ -64,7 +58,7 @@ namespace HelloWorld
                 Computer.VideoCard
              FROM TutorialAppSchema.Computer";
 
-            IEnumerable<Computer> computers = dbConnection.Query<Computer>(sqlSelect);
+            IEnumerable<Computer> computers = dapper.LoadData<Computer>(sqlSelect);
 
             foreach(Computer computer in computers)
             {
