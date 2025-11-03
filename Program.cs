@@ -1,51 +1,61 @@
-﻿// 40. Dapper Pt 2
+﻿//42. Entity Framework
 
 using System;
 using System.Data;
+using System.Globalization;
 using System.Text.RegularExpressions;
 using Dapper;
 using HelloWorld.Data;
 using HelloWorld.Models;
 using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
 
 namespace HelloWorld
 {
-  
-
     internal class Program
     {
         static void Main(string[] args)
         {
             DataContextDapper dapper = new DataContextDapper();
-            DateTime rightNow = dapper.LoadDataSingle<DateTime>("SELECT GETDATE()"); // explanation: This line executes the SQL command and retrieves the first result as a DateTime object.
+            DataContextEF entityFramework = new DataContextEF();
 
-            // Console.WriteLine(rightNow.ToShortDateString());
-            Computer myComputer = new Computer()
+            DateTime rightNow = dapper.LoadDataSingle<DateTime>("SELECT GETDATE()");
 
+            // Console.WriteLine(rightNow.ToString());
+            
+            Computer myComputer = new Computer() 
             {
-                Motherboard = "ASUS ROG STRIX B550-F GAMING",
-                CPUCore = 8,
+                ComputerId = 0,
+                Motherboard = "Z690",
                 HasWifi = true,
-                HasLTE = true,
+                HasLTE = false,
                 ReleaseDate = DateTime.Now,
-                Price = 1299.99m,
-                VideoCard = "NVIDIA GeForce RTX 5010"
+                Price = 943.87m,
+                VideoCard = "RTX 2060"
             };
 
-            string sql = @"INSERT INTO TutorialAppSchema.Computer 
-                           (Motherboard, CPUCore, HasWifi, HasLTE, ReleaseDate, Price, VideoCard) 
-                           VALUES 
-                           (@Motherboard, @CPUCore, @HasWifi, @HasLTE, @ReleaseDate, @Price, @VideoCard);"; // Using named parameters for better readability and maintainability
+            Console.WriteLine(myComputer.ComputerId);
 
+            entityFramework.Add(myComputer);
+            entityFramework.SaveChanges();
 
-            Console.WriteLine(sql);
+            // Use a parameterized query to prevent SQL Injection
+            string sql = @"INSERT INTO TutorialAppSchema.Computer (
+                Motherboard,
+                HasWifi,
+                HasLTE,
+                ReleaseDate,
+                Price,
+                VideoCard
+            ) VALUES (@Motherboard, @HasWifi, @HasLTE, @ReleaseDate, @Price, @VideoCard)";
 
+            // Console.WriteLine(sql);
 
-            // Dapper automatically maps properties of myComputer to the named parameters in the SQL string.
-            // It also handles proper type conversion and prevents SQL injection.
-            
-            bool result = dapper.ExecuteSql(sql);
-            Console.WriteLine($"Number of rows inserted: {result}");
+            // Pass the 'myComputer' object to Dapper, which maps its properties to the SQL parameters
+            int rowsAffected = dapper.ExecuteSqlWithRowCount(sql, myComputer);
+            Console.WriteLine($"Rows affected by Dapper insert: {rowsAffected}");
+
+            // Console.WriteLine(result);
 
             string sqlSelect = @"
             SELECT 
@@ -60,11 +70,43 @@ namespace HelloWorld
 
             IEnumerable<Computer> computers = dapper.LoadData<Computer>(sqlSelect);
 
-            foreach(Computer computer in computers)
+            Console.WriteLine("'ComputerId','Motherboard','HasWifi','HasLTE','ReleaseDate'" 
+                + ",'Price','VideoCard'");
+            foreach(Computer singleComputer in computers)
             {
-                Console.WriteLine($" Motherboard: {computer.Motherboard}, Price: {computer.Price}");
+                Console.WriteLine("'" + singleComputer.ComputerId 
+                    + "','" + singleComputer.Motherboard
+                    + "','" + singleComputer.HasWifi
+                    + "','" + singleComputer.HasLTE
+                    + "','" + singleComputer.ReleaseDate.ToString("yyyy-MM-dd")
+                    + "','" + singleComputer.Price.ToString("0.00", CultureInfo.InvariantCulture)
+                    + "','" + singleComputer.VideoCard + "'");
             }
 
+            IEnumerable<Computer>? computersEf = entityFramework.Computer?.ToList<Computer>();
+
+            if (computersEf != null)
+            {
+                Console.WriteLine("'ComputerId','Motherboard','HasWifi','HasLTE','ReleaseDate'" 
+                    + ",'Price','VideoCard'");
+                foreach(Computer singleComputer in computersEf)
+                {
+                    Console.WriteLine("'" + singleComputer.ComputerId 
+                        + "','" + singleComputer.Motherboard
+                        + "','" + singleComputer.HasWifi
+                        + "','" + singleComputer.HasLTE
+                        + "','" + singleComputer.ReleaseDate.ToString("yyyy-MM-dd")
+                        + "','" + singleComputer.Price.ToString("0.00", CultureInfo.InvariantCulture)
+                        + "','" + singleComputer.VideoCard + "'");
+                }
+            }
+
+            // myComputer.HasWifi = false;
+            // Console.WriteLine(myComputer.Motherboard);
+            // Console.WriteLine(myComputer.HasWifi);
+            // Console.WriteLine(myComputer.ReleaseDate);
+            // Console.WriteLine(myComputer.VideoCard);
         }
+
     }
 }

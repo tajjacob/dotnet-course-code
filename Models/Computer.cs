@@ -1,10 +1,11 @@
-namespace HelloWorld.Models // define the namespace for the Computer class
+namespace HelloWorld.Models
 {
     public class Computer
     {
+        // private string _motherboard;
         public int ComputerId { get; set; }
-        public string Motherboard { get; set; } = ""; //auto-implemented properties. for non-nullable reference types, you must initialize them
-        public int CPUCore { get; set; } // get - Retrieves (reads) the value, set - Assigns (writes) the value
+        public string Motherboard { get; set; } = "";
+        public int? CPUCore { get; set; }
         public bool HasWifi { get; set; }
         public bool HasLTE { get; set; }
         public DateTime ReleaseDate { get; set; }
