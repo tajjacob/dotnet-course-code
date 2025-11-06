@@ -38,6 +38,9 @@ SELECT [ComputerId],
     --WHERE 1 = 1
 
 
+USE DotNetCourseDatabase
+GO
+
 -- SET IDENTITY_INSERT TutorialAppSchema.Computer ON    
 
 INSERT INTO TutorialAppSchema.Computer (
