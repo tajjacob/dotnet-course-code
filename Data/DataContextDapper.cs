@@ -38,11 +38,12 @@ namespace HelloWorld.Data
                      return (    dbConnection.Execute(sql) > 0); // returns true if one or more rows were affected
                        
                     
-                 } public int ExecuteSqlWithRowCount<T>(string sql, T parameters) // explanation: Generic method to execute a SQL command (like INSERT, UPDATE, DELETE)
+                 } public int ExecuteSqlWithRowCount(string sql, object parameters) // explanation: Generic method to execute a SQL command (like INSERT, UPDATE, DELETE)
                  {
                       IDbConnection dbConnection = new SqlConnection(_connectionString); 
                      return dbConnection.Execute(sql, parameters); // returns the number of rows affected 
                        
                     
-                 }     }
+                 }
+}
 }

@@ -40,3 +40,4 @@ appsettings.Development.json
 
 # Nuget Packages
 *.nupkg
+.fake
