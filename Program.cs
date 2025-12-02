@@ -1,100 +1,56 @@
-﻿// 24. Methods (functions)
+﻿// 52. Async Methods
+/// Commands to run in terminal:
+/// cd /Users/tajjacob/Documents/GitHub/dotnet-course-code/HelloWorld
+/// dotnet --info
+/// dotnet clean
+/// dotnet build -v:m
+/// dotnet run
 
-using System;
+using System.Threading.Tasks;
 
-namespace MyApp
+namespace HelloWorld
 {
-    class Program // test
-
+    internal class Program
     {
-
-       static int accessibleInt = 7; // static method can only access other static attributes
-
-        void TestMethod() // non-static method can access static attributes or non-static attributes
+        static async Task Main(string[] args)
         {
-            Console.WriteLine($"Accessible Int: {accessibleInt}");
-        }
-        static void Main(string[] args)
-        {
-            int[] intsToCompress = { 10, 15, 20, 25, 30, 12, 34 };
-
-            int totalValue = intsToCompress[0] + intsToCompress[1] + intsToCompress[2] +
-                             intsToCompress[3] + intsToCompress[4] + intsToCompress[5] +
-                             intsToCompress[6];
-
-            Console.WriteLine($"Total Value: {totalValue}"); // Outputs: Total Value: 146    
-
-            totalValue = 0;
-
-            for (int i = 0; i < intsToCompress.Length; i++)
+            // explanation: https://learn.microsoft.com/en-us/dotnet/csharp/programming-guide/concepts/async/
+           Task firstTask = new Task(
+            () =>
             {
-                totalValue += intsToCompress[i];
+                Thread.Sleep(100);
+                Console.WriteLine("Task 1");
             }
-            Console.WriteLine($"Total Value using loop: {totalValue}"); // Outputs: Total Value using loop: 146
+           );
+            firstTask.Start();
 
+            Task secondTask = ConsoleAfterDelayAsync("Task 2", 150);
 
-            totalValue = 0;
-            foreach (int intForCompression in intsToCompress)
-            {
-                if (intForCompression > 20)
-                {
-                    totalValue += intForCompression;
-                }
+            ConsoleAfterDelay("Delay", 75);
 
-            }
-            Console.WriteLine($"Total Value using foreach with if: {totalValue}"); // Outputs: Total Value using foreach with if: 89
+            Task thirdTask = ConsoleAfterDelayAsync("Task 3", 50);
 
-            totalValue = 0;
-
-            foreach (int intForCompression in intsToCompress)
-            {
-                totalValue += intForCompression;
-            }
-            Console.WriteLine($"Total Value using foreach: {totalValue}"); // Outputs: Total Value using foreach: 146
-
-            int index = 0;
-            totalValue = 0;
-
-            while (index < intsToCompress.Length)
-            {
-                totalValue += intsToCompress[index];
-                index++;
-            }
-            Console.WriteLine($"Total Value using while: {totalValue}"); // Outputs: Total Value using while: 146
-
-            int ind = 0;
-            totalValue = 0;
-
-            do
-            {
-                totalValue += intsToCompress[ind];
-                ind++;
-            }
-
-            while (ind < intsToCompress.Length); // run then check condition
-
-            Console.WriteLine($"Total Value using do while: {totalValue}"); // Outputs: Total Value using do while: 146
-
-            totalValue = 0;
-            totalValue = intsToCompress.Sum();
-            Console.WriteLine($"Total Value using LINQ Sum(): {totalValue}"); // Outputs: Total Value using LINQ Sum(): 146
-
-            int[] intsToCompress2 = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
-            totalValue = GetSum(intsToCompress2);
-            Console.WriteLine($"Total Value using method: {totalValue}"); // Outputs: Total Value using method: 55
-
-
-
+           await secondTask;
+           await firstTask;
+           Console.WriteLine("After the task was created");
+           await thirdTask;
         }
 
-        private static int GetSum(int[] intsToCompress)
+        static void ConsoleAfterDelay(string text, int delayTime)
         {
-            int totalValue = 0;
-            foreach (int intForCompression in intsToCompress)
-            {
-                totalValue += intForCompression;
-            }
-            return totalValue;
+            Thread.Sleep(delayTime);
+            Console.WriteLine(text);
+        } 
+        
+        static async Task ConsoleAfterDelayAsync(string text, int delayTime)
+        {
+            await Task.Delay(delayTime);
+            Console.WriteLine(text);
         }
+
     }
+
+    // explanation: the order of output will vary due to the asynchronous nature of the tasks. 
+
+    
 }
