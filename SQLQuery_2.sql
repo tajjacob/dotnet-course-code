@@ -50,6 +50,40 @@ ORDER BY Users.UserId DESC
 DELETE FROM TutorialAppSchema.UserJobInfo
 WHERE UserId > 500
          
+DELETE FROM TutorialAppSchema.UserSalary
+WHERE UserId BETWEEN 250 AND 750       -- 501 rows deleted, when we use BETWEEN it includes both boundary values
+
+SELECT * FROM TutorialAppSchema.UserSalary
+WHERE EXISTS 
+(SELECT * FROM TutorialAppSchema.UserJobInfo AS UserJobInfo 
+WHERE UserJobInfo.UserId = UserSalary.UserId)
+AND UserId <> 7 -- explanation: excluding UserId 7 from the result set
+-- Difference between WHERE and WHERE EXISTS
+-- WHERE filters based on column values
+-- WHERE EXISTS filters based on existence of related records in another table
+
+
+SELECT [UserId],
+[Salary] FROM TutorialAppSchema.UserSalary
+-- UNION -- EXPLANATION: UNION removes duplicates
+UNION ALL -- EXPLANATION: UNION ALL includes duplicates
+SELECT [UserId],
+[Salary] FROM TutorialAppSchema.UserSalary
+
+CREATE CLUSTERED INDEX cix_UserSalary_UserId ON TutorialAppSchema.UserSalary (UserId)
+-- Explanation: Creating clustered index on UserId column of UserSalary table to improve query performance
+-- Note: Clustered index sorts and stores the data rows in the table based on the indexed column
+
+CREATE NONCLUSTERED INDEX ix_UserSalary_Salary ON TutorialAppSchema.UserSalary (Salary)
+-- Explanation: Creating non-clustered index on Salary column of UserSalary table to improve query performance
+-- Note: Non-clustered index creates a separate structure from the data rows that points to the data rows in the table 
+
+CREATE NONCLUSTERED INDEX ix_UserJobInfo_JobTitle ON TutorialAppSchema.UserJobInfo (JobTitle) INCLUDE (Department)
+-- non-clustered index with include explanation: Creating non-clustered index on JobTitle column of UserJobInfo table with Department column included
+-- Note: INCLUDE clause adds additional columns to the index to cover more queries 
+
+
+
          
 -- SELECT  [UserId]
 --         , [FirstName]
