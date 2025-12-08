@@ -82,8 +82,28 @@ CREATE NONCLUSTERED INDEX ix_UserJobInfo_JobTitle ON TutorialAppSchema.UserJobIn
 -- non-clustered index with include explanation: Creating non-clustered index on JobTitle column of UserJobInfo table with Department column included
 -- Note: INCLUDE clause adds additional columns to the index to cover more queries 
 
+CREATE NONCLUSTERED INDEX ix_Users_JobTitle 
+ON TutorialAppSchema.Users(Active) INCLUDE ([Email], [FirstName], [LastName]) 
+WHERE Active = 1
+-- filtered index explanation: Creating filtered non-clustered index on Active column of Users table with additional columns Email, FirstName, LastName included
+-- Note: Filtered index improves query performance for queries that filter on Active = 1
 
-
+SELECT ISNULL([UserJobInfo].[Department], 'No Department Listed') AS Department,
+SUM([UserSalary].[Salary]) AS Salary,
+MIN([UserSalary].[Salary]) AS MinSalary,
+MAX([UserSalary].[Salary]) AS MaxSalary,
+AVG([UserSalary].[Salary]) AS AvgSalary,
+COUNT (*) AS PeopleInDepartment, -- counting number of users in each department
+STRING_AGG(Users.UserId, ', ') AS UserIds -- concatenating UserIds in each department. concatenating meaning joining multiple values into a single string with a separator
+FROM TutorialAppSchema.Users AS Users
+-- INNER JOIN
+JOIN TutorialAppSchema.UserSalary AS UserSalary -- join meaning: only those records that have matching UserId in both tables
+    ON UserSalary.UserId = Users.UserId 
+    LEFT JOIN TutorialAppSchema.UserJobInfo AS UserJobInfo -- left join meaning: all records from left table (Users) and matching records from right table (UserJobInfo)
+        ON UserJobInfo.UserId = Users.UserId 
+WHERE Users.Active = 1 
+GROUP BY [UserJobInfo].[Department]
+ORDER BY ISNULL([UserJobInfo].[Department], 'No Department Listed')  DESC -- ordering by Department in descending order, if want to order by Salary use ORDER BY Salary DESC
          
 -- SELECT  [UserId]
 --         , [FirstName]
