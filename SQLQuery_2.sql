@@ -137,6 +137,63 @@ JOIN TutorialAppSchema.UserSalary AS UserSalary -- join meaning: only those reco
 WHERE Users.Active = 1 
 ORDER BY Users.UserId DESC
 
+SELECT GETDATE()
+
+SELECT DATEADD(YEAR, -5, GETDATE()) 
+
+SELECT DATEDIFF(MINUTE, DATEADD(YEAR, -5, GETDATE()), GETDATE()) -- explanation: calculating difference in minutes between two dates, positive value because first date is earlier than second date
+
+SELECT DATEDIFF(MINUTE, GETDATE(), DATEADD(YEAR, -5, GETDATE())) -- explanation: calculating difference in minutes between two dates, negative value because first date is later than second date
+
+ALTER TABLE TutorialAppSchema.UserSalary ADD AvgSalary DECIMAL(18,4) -- ALTER TABLE explanation: adding new column AvgSalary to UserSalary table with data type DECIMAL(18,4)
+
+SELECT * FROM TutorialAppSchema.UserSalary AS UserSalary
+
+UPDATE UserSalary 
+SET UserSalary.AvgSalary = DepartmentAverage.AvgSalary
+FROM TutorialAppSchema.UserSalary AS UserSalary
+LEFT JOIN TutorialAppSchema.UserJobInfo AS UserJobInfo 
+        ON UserJobInfo.UserId = UserSalary.UserId 
+ CROSS APPLY (
+                  SELECT ISNULL([UserJobInfo2].[Department], 'No Department Listed') AS Department,
+            AVG([UserSalary2].[Salary]) AS AvgSalary
+            FROM TutorialAppSchema.UserSalary AS UserSalary2 
+              
+                LEFT JOIN TutorialAppSchema.UserJobInfo AS UserJobInfo2 
+                    ON UserJobInfo2.UserId = UserSalary2.UserId 
+            WHERE ISNULL([UserJobInfo2].[Department], 'No Department Listed') = ISNULL([UserJobInfo].[Department], 'No Department Listed')
+            GROUP BY [UserJobInfo2].[Department]
+    ) AS DepartmentAverage 
+
+    -- In summary, the query iterates through each user, finds their department, 
+    -- calculates the average salary for that entire department, 
+    -- and then writes that calculated average back into that user's row in the UserSalary table.
+
+
+-- Alternative approach using CTE
+ WITH DepartmentAverages AS ( -- explanation: Common Table Expression (CTE) to calculate average salary per department
+    SELECT 
+        us.UserId,
+        AVG(us.Salary) OVER (PARTITION BY ISNULL(uji.Department, 'No Department Listed')) AS CalculatedAvgSalary
+    FROM 
+        TutorialAppSchema.UserSalary AS us
+    LEFT JOIN 
+        TutorialAppSchema.UserJobInfo AS uji ON us.UserId = uji.UserId
+)
+UPDATE us
+SET 
+    us.AvgSalary = da.CalculatedAvgSalary
+FROM 
+    TutorialAppSchema.UserSalary AS us
+JOIN 
+    DepartmentAverages AS da ON us.UserId = da.UserId;
+-- Explanation: Using Common Table Expression (CTE) to calculate average salary per department and update UserSalary table accordingly.
+-- WITH clause defines the CTE, which is then used in the UPDATE statement to set the AvgSalary for each user based on their department's average salary.
+
+
+
+   
+
 
 -- SELECT  [UserId]
 --         , [FirstName]
